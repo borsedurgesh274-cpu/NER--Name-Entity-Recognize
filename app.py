@@ -1,39 +1,28 @@
 import streamlit as st
 import spacy
-from spacy import displacy
 
-# Load the model
+# Load spaCy model
 @st.cache_resource
 def load_model():
     return spacy.load("en_core_web_sm")
 
 nlp = load_model()
 
-# Dashboard Title
-st.title("🏷️ Entity Extraction Dashboard")
-st.markdown("Enter text below to identify names, locations, and organizations.")
+# Page config
+st.set_page_config(
+    page_title="NER Dashboard",
+    page_icon="🔍",
+    layout="centered"
+)
 
-# User input
-text_input = st.text_area("Input Text:", "Virat Kohli Was Born In Delhi And Playes Cricket For India")
-
-if st.button("Analyze Text"):
-    if text_input.strip():
-        doc = nlp(text_input)
-        
-        # 1. Visualization (User Friendly)
-        st.subheader("Visual Analysis")
-        ent_html = displacy.render(doc, style="ent")
-        st.write(ent_html, unsafe_allow_html=True)
-        
-        # 2. Data Table
-        st.subheader("Entity Details")
-        entities = [[ent.text, ent.label_, spacy.explain(ent.label_)] for ent in doc.ents]
-        
-        if entities:
-            st.table({"Entity": [e[0] for e in entities], 
-                      "Label": [e[1] for e in entities], 
-                      "Description": [e[2] for e in entities]})
-        else:
-            st.info("No entities found.")
-    else:
-        st.warning("Please enter some text.")
+# Header
+st.markdown(
+    """
+    <h1 style='text-align: center; color: #4CAF50;'>
+        Named Entity Recognition (NER)
+    </h1>
+    <h4 style='text-align: center;'>
+        Built using spaCy & Streamlit
+    </h4>
+    <p style='text-align: center;'>
+        Created by <b>Durgesh Borse</b>
